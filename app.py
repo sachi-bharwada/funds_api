@@ -143,7 +143,7 @@ def deleteFund(current_user, id):
             return make_response({'message': f'Fund with id:{id} not found'}, 404)    
         db.session.delete(fund)
         db.session.commit()
-        return make_response({'message': 'Deleted fund'}, 200)
+        return make_response({'message': 'Deleted fund'}, 202)
     except Exception as e:
         print(e)
         return make_response({'message':'Unable to process'}, 409)

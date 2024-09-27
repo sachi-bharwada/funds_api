@@ -12,7 +12,7 @@ class Users(db.Model):
     funds = db.relationship('Funds', backref="Users")
 
     def __reprint__(self):
-        return f'<User {self.firstName} {self.id}'
+        return f'<User {self.firstName} {self.id}>'
     
 
 class Funds(db.Model):
