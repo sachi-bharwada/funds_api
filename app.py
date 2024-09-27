@@ -1,4 +1,6 @@
 from . import app, db
+import os 
+from dotenv import load_dotenv
 from flask import request, make_response
 from .models import Users, Funds
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -6,6 +8,10 @@ import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 from sqlalchemy.sql import func
+
+load_dotenv()
+
+key = os.getenv('KEY')
 
 @app.route("/signup", methods=["POST"])
 def signup():
@@ -58,7 +64,7 @@ def login():
             'id': user.id,
             'exp': datetime.utcnow() + timedelta(minutes=30)
         },
-        "secret",
+        f'{key}',
         "HS256"
         )
         return make_response({'token':token}, 201)
@@ -78,7 +84,7 @@ def token_required(f):
             return make_response({'message':'Token is missing'},  401)
         
         try:
-            data = jwt.decode(token, "secret", algorithms=["HS256"])
+            data = jwt.decode(token, f'{key}', algorithms=["HS256"])
             current_user = Users.query.filter_by(id=data["id"]).first()
 
         except Exception as e:
